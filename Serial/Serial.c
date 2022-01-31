@@ -1,0 +1,78 @@
+#include "Serial.h"
+#include <eers.h>
+
+#define owner(channel) (lr_owner_t)(props->handler->channel)
+
+WILL_MOUNT(Serial)
+{
+    props->handler->init(&props->baudrate);
+    if (!props->delimiter) {
+        props->delimiter = '\r';
+    }
+}
+
+SHOULD_UPDATE(Serial)
+{
+    unsigned char sending;
+
+    if (props->handler->is_data_received()) {
+        state->mode = COMMUNICATION_MODE_RECEIVER;
+        return true;
+    }
+
+    if (props->handler->is_transmit_ready()) {
+        // Send Handler for next received signal
+        lr_data_t cell_data = 0;
+        state->mode         = COMMUNICATION_MODE_TRANSMITTER;
+
+        if (lr_read(props->buffer, &cell_data, owner(transmit)) == OK) {
+            state->sending = (uint8_t)cell_data;
+            log_info("Sending %c", state->sending);
+
+            if (state->sending)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+WILL_UPDATE(Serial) {}
+
+RELEASE(Serial)
+{
+    void (*callback)(eer_t *);
+
+    if (state->mode == COMMUNICATION_MODE_TRANSMITTER) {
+        props->handler->transmit(state->sending);
+
+        callback = props->on.transmit;
+    } else if (state->mode == COMMUNICATION_MODE_RECEIVER) {
+        state->sending = props->handler->receive();
+        lr_write(props->buffer, state->sending, owner(receive));
+
+        callback = props->on.receive;
+    }
+
+    if (callback)
+        callback(self);
+}
+
+DID_MOUNT(Serial) {}
+
+DID_UPDATE(Serial)
+{
+    void (*callback)(eer_t *);
+
+    if (state->sending == props->delimiter) {
+        if (state->mode == COMMUNICATION_MODE_RECEIVER)
+            callback = props->on.receive_block;
+        else
+            callback = props->on.transmit_block;
+
+        if (callback)
+            callback(self);
+    }
+
+    state->sending = 0;
+}

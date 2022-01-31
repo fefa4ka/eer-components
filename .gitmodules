@@ -1,0 +1,4 @@
+[submodule "eer"]
+	path = eer
+	url = ../../fefa4ka/eer.git
+	branch = master
