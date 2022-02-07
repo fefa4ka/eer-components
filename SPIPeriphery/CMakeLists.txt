@@ -3,6 +3,6 @@ project(SPIPeriphery VERSION 1.0
     LANGUAGES C)
 
 set(SPIPeriphery_LIBS lr)
-set(SPIPeriphery_test_LIBS SPIComputer)
+set(TEST_LIBS SPIComputer)
 
 include(../component.cmake)

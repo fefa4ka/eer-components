@@ -13,7 +13,7 @@
 struct lr_cell     cells[BUFFER_SIZE] = {0};
 struct linked_ring buffer             = {cells, BUFFER_SIZE};
 
-Clock(clk, &hw.timer, TIMESTAMP);
+Clock(clk, &hw(timer), TIMESTAMP);
 
 pin_t clk_pin  = hw_pin(CLK, 1);
 pin_t copi_pin = hw_pin(MOSI, 1);
@@ -23,7 +23,7 @@ pin_t cipo_pin = hw_pin(MISO, 1);
 /* Bitbang SPI output */
 pin_t *       spi_pins[]  = {&copi_pin, &cipo_pin, NULL};
 enum pin_mode spi_modes[] = {PIN_MODE_OUTPUT, PIN_MODE_INPUT};
-Bitbang(spi, _({.io        = &hw.io,
+Bitbang(spi, _({.io        = &hw(gpio),
                 .clock     = &clk.state.time,
                 .baudrate  = 9600,
                 .bit_order = BIT_ORDER_MSB,
@@ -44,7 +44,7 @@ result_t count()
     test_assert(buffer_size(&cipo_pin) == 0,
                 "CIPO buffer should be empty, but %d", buffer_size(&cipo_pin));
 
-    hw.io.on(&cipo_pin);
+    hw(gpio).on(&cipo_pin);
     lr_write_string(&buffer, number_order, lr_owner(&copi_pin));
     sleep(3);
 

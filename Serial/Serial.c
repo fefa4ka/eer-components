@@ -21,13 +21,11 @@ SHOULD_UPDATE(Serial)
     }
 
     if (props->handler->is_transmit_ready()) {
-        // Send Handler for next received signal
         lr_data_t cell_data = 0;
         state->mode         = COMMUNICATION_MODE_TRANSMITTER;
 
         if (lr_read(props->buffer, &cell_data, owner(transmit)) == OK) {
             state->sending = (uint8_t)cell_data;
-            log_info("Sending %c", state->sending);
 
             if (state->sending)
                 return true;

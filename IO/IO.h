@@ -4,6 +4,7 @@
 
 #define IO(instance) eer(IO, instance)
 #define IO_new(instance, state) eer_withstate(IO, instance, _(state))
+#define IO_level(instance) eer_state(IO, instance, level)
 
 typedef struct {
   enum { IO_LOW, IO_HIGH } level;
@@ -12,7 +13,7 @@ typedef struct {
 typedef struct {
   bool level;
 
-  eer_io_handler_t *io;
+  eer_gpio_handler_t *io;
   void *pin;
 
   enum { IO_OUTPUT, IO_INPUT } mode;

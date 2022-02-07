@@ -5,16 +5,14 @@
 #include <stddef.h>
 
 #define Bitbang(instance, props)     eer_define(Bitbang, instance, _(props), 0)
-#define Bitbang_new(instance, state) eer_withstate(Bitbang, instance, state)
-
 
 #ifndef BITBANG_MAX_LINES
     #define BITBANG_MAX_LINES 8
 #endif
 
 typedef struct {
-    eer_io_handler_t *   io;
-    struct Clock_time *clock;
+    eer_gpio_handler_t *io;
+    struct Clock_time * clock;
 
     // TODO: use macros and pack to uint8_t
     uint16_t baudrate;

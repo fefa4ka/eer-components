@@ -11,7 +11,7 @@
 struct lr_cell     cells[BUFFER_SIZE] = {0};
 struct linked_ring buffer             = {cells, BUFFER_SIZE};
 
-Clock(clk, &hw.timer, TIMESTAMP);
+Clock(clk, &hw(timer), TIMESTAMP);
 
 pin_t copi_pin        = hw_pin(MOSI, 0);
 pin_t cipo_pin        = hw_pin(MISO, 0);
@@ -20,7 +20,7 @@ pin_t chip_select_pin = hw_pin(CS, 0);
 
 pin_t debug_pin = hw_pin(DEBUG, 1);
 
-SPIComputer(spi, _({.io       = &hw.io,
+SPIComputer(spi, _({.io       = &hw(gpio),
                     .clock    = &clk.state.time,
                     // Could failed if speed too much for debug eer step
                     .baudrate = 2400,
@@ -48,7 +48,7 @@ void mirror_receive(eer_t *instance)
 }
 
 SPIPeriphery(mirror, _({
-            .io = &hw.io,
+            .io = &hw(gpio),
             .buffer = &buffer,
             .bus      = {
                 .copi_pin = &copi_pin,
@@ -66,7 +66,7 @@ result_t                   hello(void *message, void *argument)
 {
     uint8_t address = *(uint8_t *)message;
 
-    hw.io.flip(&debug_pin);
+    hw(gpio).flip(&debug_pin);
 
     SPI_read(&spi, address, &callback, &chip_select_pin);
 

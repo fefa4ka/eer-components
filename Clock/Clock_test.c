@@ -6,7 +6,7 @@
 
 
 /* Datetime couting */
-Clock(clk, &hw.timer, 0);
+Clock(clk, &hw(timer), 0);
 struct Clock_calendar now;
 
 test(ticks) {

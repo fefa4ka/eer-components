@@ -8,4 +8,6 @@ if(${CLOCK_DATE})
     add_definitions(-D_Clock_date)
 endif()
 
+set(TEST_HAL_LIBS gpio timer)
+
 include(../component.cmake)

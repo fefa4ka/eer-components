@@ -6,8 +6,8 @@
     eer_define(SPIComputer, instance, _(props), 0)
 
 typedef struct {
-    eer_io_handler_t *  io;
-    struct Clock_time *clock;
+    eer_gpio_handler_t *io;
+    struct Clock_time * clock;
 
     uint16_t baudrate;
     enum eer_bit_order
@@ -27,7 +27,7 @@ typedef struct {
     Bitbang_t bitbanger;
 
     struct eer_callback *callback;
-    void *           chip_select_pin;
+    void *               chip_select_pin;
 
     struct {
         struct eer_callback start;
@@ -42,4 +42,3 @@ void SPI_write(SPIComputer_t *spi, unsigned char address, unsigned char value,
 
 void SPI_read(SPIComputer_t *spi, unsigned char address,
               struct eer_callback *callback, void *chip_select_pin);
-

@@ -7,7 +7,7 @@
     eer_define(SPIPeriphery, instance, _(props), {0})
 
 typedef struct {
-    eer_io_handler_t *  io;
+    eer_gpio_handler_t *  io;
 
     struct linked_ring *buffer;
 

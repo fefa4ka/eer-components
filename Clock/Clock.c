@@ -80,7 +80,7 @@ WILL_MOUNT(Clock)
 ///
 /// \brief Clock should update everytime
 ///
-SHOULD_UPDATE(Clock) { return true; }
+SHOULD_UPDATE_SKIP(Clock);
 
 ///
 /// \brief Calculate total passed timer ticks
@@ -131,12 +131,14 @@ RELEASE(Clock)
     }
 }
 
+#ifdef _Clock_date
 DID_MOUNT(Clock)
 {
-#ifdef _Clock_date
     if (props->calendar)
         Clock_date(state->time.timestamp, props->calendar);
-#endif
 }
+#else
+DID_MOUNT_SKIP(Clock);
+#endif
 
-DID_UPDATE(Clock) {}
+DID_UPDATE_SKIP(Clock);

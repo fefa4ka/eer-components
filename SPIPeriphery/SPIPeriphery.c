@@ -91,7 +91,7 @@ DID_MOUNT(SPIPeriphery) {}
 
 DID_UPDATE(SPIPeriphery)
 {
-    void (*callback)(eer_t *) = NULL;
+    void (*callback)(eer_t *) = 0;
 
     if (state->clk_level && state->bit_position == 7 && props->on.start) {
         callback = props->on.start;

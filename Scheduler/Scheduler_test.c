@@ -15,8 +15,8 @@
 #define TIMEOUT_4 1000
 
 /* Timer and callback scheduler */
-Clock(clk, &hw.timer, TIMESTAMP);
-Scheduler(scheduler, 15, _({.timer = &hw.timer}));
+Clock(clk, &hw(timer), TIMESTAMP);
+Scheduler(scheduler, 15, _({.timer = &hw(timer)}));
 
 
 int trigger_count = 0;

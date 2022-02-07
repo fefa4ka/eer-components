@@ -5,12 +5,12 @@
 
 #define Serial(instance, props) eer_withprops(Serial, instance, _(props))
 #define Serial_write(instance, message)                                        \
-    lr_write(eer_prop(Serial, instance, buffer), (uint8_t *)message,           \
+    lr_write(eer_prop(Serial, instance, buffer), lr_data(message),             \
              lr_owner(eer_prop(Serial, instance, handler)->transmit))
 #define Serial_write_string(instance, message)                                 \
-    lr_write_string(eer_prop(Serial, instance, buffer),                        \
-                    (unsigned char *)message,                                  \
-             (lr_owner_t)(eer_prop(Serial, instance, handler)->transmit))
+    lr_write_string(                                                           \
+        eer_prop(Serial, instance, buffer), (unsigned char *)message,          \
+        (lr_owner_t)(eer_prop(Serial, instance, handler)->transmit))
 #define Serial_read(instance, lr_data)                                         \
     lr_read(eer_prop(Serial, instance, buffer), lr_data,                       \
             (lr_owner_t)(eer_prop(Serial, instance, handler)->receive))
@@ -20,7 +20,7 @@ typedef struct {
     eer_serial_handler_t *handler;
     uint16_t              baudrate;
     uint8_t               delimiter;
-    struct linked_ring   *buffer;
+    struct linked_ring *  buffer;
 
     struct {
         void (*receive)(eer_t *instance);

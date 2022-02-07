@@ -6,7 +6,7 @@
  */
 WILL_MOUNT(Button)
 {
-    eer_io_handler_t *io = props->io;
+    eer_gpio_handler_t *io = props->io;
 
     /* Setup pin as input */
     io->in(props->pin);
@@ -126,6 +126,6 @@ RELEASE(Button)
     }
 }
 
-DID_MOUNT(Button) {}
-DID_UPDATE(Button) {}
-DID_UNMOUNT(Button) {}
+DID_MOUNT_SKIP(Button);
+DID_UPDATE_SKIP(Button);
+DID_UNMOUNT_SKIP(Button);

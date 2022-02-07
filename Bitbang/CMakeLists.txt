@@ -4,8 +4,8 @@ project(Bitbang VERSION 1.0
 
 find_program(SIGROK sigrok-cli REQUIRED)
 
-set(Bitbang_LIBS Clock lr)
-set(Bitbang_test_LIBS IO)
+set(LIBS Clock lr)
+set(TEST_LIBS IO)
 
 include(../component.cmake)
 

@@ -9,11 +9,17 @@ include(eer/options.cmake)
 
 add_subdirectory(eer)
 
+# Periphery
 add_subdirectory(IO)
+
+# Abstract
 add_subdirectory(Clock)
-add_subdirectory(Scheduler)
 add_subdirectory(Button)
 add_subdirectory(Serial)
+add_subdirectory(Scheduler)
+add_subdirectory(Menu)
 add_subdirectory(Bitbang)
+
+# Interfaces
 add_subdirectory(SPIComputer)
 add_subdirectory(SPIPeriphery)

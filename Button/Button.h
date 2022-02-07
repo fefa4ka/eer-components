@@ -6,8 +6,8 @@
 #define Button_is_pressed(instance) eer_state(Button, instance, pressed)
 
 typedef struct {
-    eer_io_handler_t *io;
-    void             *pin;
+    eer_gpio_handler_t *io;
+    void *              pin;
 
     enum {
         BUTTON_PUSH_PULLUP, /* Button pressed only when pushed */
