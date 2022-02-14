@@ -4,5 +4,6 @@ project(SPIPeriphery VERSION 1.0
 
 set(SPIPeriphery_LIBS lr)
 set(TEST_LIBS SPIComputer)
+set(TEST_HAL_LIBS gpio timer)
 
 include(../component.cmake)

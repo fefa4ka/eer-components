@@ -5,5 +5,6 @@ project(SPIComputer VERSION 1.0
 find_program(SIGROK sigrok-cli REQUIRED)
 
 set(LIBS Bitbang)
+set(TEST_HAL_LIBS gpio timer)
 
 include(../component.cmake)

@@ -10,7 +10,7 @@
 Clock(clk, &hw(timer), 0);
 
 /* Indicator */
-pin_t led_pin = hw_pin(B, 1);
+pin_t led_pin = hw_pin(led, 1);
 IO_new(led, _({
                 .io   = &hw(gpio),
                 .pin  = &led_pin,
@@ -19,7 +19,7 @@ IO_new(led, _({
 
 /* Mode switcher. Led could blink When enabled. */
 bool  enabled      = false;
-pin_t switcher_pin = hw_pin(D, 1);
+pin_t switcher_pin = hw_pin(switcher, 1);
 void  switcher_toggle(eer_t *trigger) { enabled = !enabled; }
 void  switcher_pressed(eer_t *trigger) {}
 void  switcher_released(eer_t *trigger) {}
@@ -36,7 +36,7 @@ Button(switcher, _({.io  = &hw(gpio),
                     .on.press   = switcher_pressed}));
 
 /* Push button for led blinking */
-pin_t pusher_pin = hw_pin(D, 0);
+pin_t pusher_pin = hw_pin(pusher, 0);
 void  pusher_toggle(eer_t *trigger) {}
 void  pusher_pressed(eer_t *trigger) {}
 void  pusher_released(eer_t *trigger) {}
@@ -63,7 +63,6 @@ test(initial_state, long_push)
 
             apply(IO, led, _({.level = Button_is_pressed(&pusher)}));
         }
-        printf("step");
     }
 }
 

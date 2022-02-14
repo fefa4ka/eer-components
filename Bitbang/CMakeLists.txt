@@ -6,6 +6,7 @@ find_program(SIGROK sigrok-cli REQUIRED)
 
 set(LIBS Clock lr)
 set(TEST_LIBS IO)
+set(TEST_HAL_LIBS gpio timer)
 
 include(../component.cmake)
 

@@ -293,5 +293,5 @@ RELEASE(Scheduler)
     }
 }
 
-DID_MOUNT(Scheduler) {}
-DID_UPDATE(Scheduler) {}
+DID_MOUNT_SKIP(Scheduler);
+DID_UPDATE_SKIP(Scheduler);

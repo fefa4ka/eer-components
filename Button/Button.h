@@ -34,9 +34,9 @@ typedef struct {
             bool level : 1;
             bool pressed : 1; /* Is button pressed */
         };
-        unsigned char flags;
+        uint8_t flags;
     };
-    unsigned long tick; /* Timestamp when pin state changed */
+    uint16_t tick; /* Timestamp when pin state changed */
 } Button_state_t;
 
 eer_header(Button);

@@ -3,4 +3,5 @@ project(Scheduler VERSION 1.0
     LANGUAGES C)
 
 set(LIBS Clock)
+set(TEST_HAL_LIBS gpio timer)
 include(../component.cmake)

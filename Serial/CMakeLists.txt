@@ -4,4 +4,6 @@ project(Serial VERSION 1.0
 
 set(LIBS lr)
 
+set(TEST_HAL_LIBS gpio uart)
+
 include(../component.cmake)

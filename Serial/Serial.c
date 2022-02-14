@@ -13,8 +13,6 @@ WILL_MOUNT(Serial)
 
 SHOULD_UPDATE(Serial)
 {
-    unsigned char sending;
-
     if (props->handler->is_data_received()) {
         state->mode = COMMUNICATION_MODE_RECEIVER;
         return true;
@@ -27,15 +25,14 @@ SHOULD_UPDATE(Serial)
         if (lr_read(props->buffer, &cell_data, owner(transmit)) == OK) {
             state->sending = (uint8_t)cell_data;
 
-            if (state->sending)
-                return true;
+            return true;
         }
     }
 
     return false;
 }
 
-WILL_UPDATE(Serial) {}
+WILL_UPDATE_SKIP(Serial);
 
 RELEASE(Serial)
 {
@@ -52,11 +49,14 @@ RELEASE(Serial)
         callback = props->on.receive;
     }
 
-    if (callback)
+    if (callback) {
         callback(self);
+        printf("[%d][%c]\n", state->mode == COMMUNICATION_MODE_RECEIVER,  state->sending);
+    } else
+        printf("%d.[%c]\n",state->mode == COMMUNICATION_MODE_RECEIVER,  state->sending);
 }
 
-DID_MOUNT(Serial) {}
+DID_MOUNT_SKIP(Serial);
 
 DID_UPDATE(Serial)
 {
