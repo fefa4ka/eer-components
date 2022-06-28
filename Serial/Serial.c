@@ -51,9 +51,8 @@ RELEASE(Serial)
 
     if (callback) {
         callback(self);
-        printf("[%d][%c]\n", state->mode == COMMUNICATION_MODE_RECEIVER,  state->sending);
-    } else
-        printf("%d.[%c]\n",state->mode == COMMUNICATION_MODE_RECEIVER,  state->sending);
+//printf("[%d][%c]\n", state->mode == COMMUNICATION_MODE_RECEIVER,  state->sending);
+    }
 }
 
 DID_MOUNT_SKIP(Serial);

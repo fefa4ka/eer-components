@@ -7,7 +7,7 @@
 #define PARENT(x) ((x) / 2)
 
 
-void event_callback(void *instance);
+result_t event_callback(void *instance, void *argument);
 int  event_compare(unsigned int now, struct Scheduler_event *a,
                    struct Scheduler_event *b);
 void event_heapify(struct Scheduler_queue *scheduler, unsigned int now,
@@ -64,7 +64,7 @@ void event_prioritify(struct Scheduler_queue *queue, unsigned int now,
 /**
  * \brief    Fire callback and turn off timer
  */
-void event_callback(void *instance)
+result_t event_callback(void *instance, void *argument)
 {
     Scheduler_t *self = instance;
     self->props.timer->isr.disable(0);
@@ -75,6 +75,8 @@ void event_callback(void *instance)
     triggered_event.callback.method(instance, triggered_event.callback.argument);
     struct Scheduler_event null_event = {0};
     self->state.next_event            = null_event;
+
+    return OK;
 }
 
 /**
@@ -269,6 +271,7 @@ RELEASE(Scheduler)
 
     unsigned int now            = props->timer->get();
     int          passed         = now - state->next_event.created;
+    /* FIXME: timer->us_to_ticks() */
     unsigned int timeout        = state->next_event.timeout_us << 1;
     unsigned int scheduled_tick = now + timeout;
 
@@ -283,7 +286,7 @@ RELEASE(Scheduler)
         || (scheduled_tick > now && props->timer->get() > scheduled_tick)
         || (now > scheduled_tick && scheduled_tick > props->timer->get())) {
         /* Scheduled event allready should happen */
-        event_callback(self);
+        event_callback(self, 0);
     } else {
         /* Schedule callback by timer, probably interrupt will be used */
         struct eer_timer_isr isr_settings = {scheduled_tick, TIMER_EVENT_COMPARE};
