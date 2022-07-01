@@ -4,7 +4,6 @@
 
 #include <eers.h>
 #include <unit.h>
-#include <version.h>
 
 /* Datetime couting */
 Clock(clk, &hw(timer), 0);

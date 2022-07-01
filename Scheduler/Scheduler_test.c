@@ -2,7 +2,6 @@
 #include <Scheduler.h>
 
 #include <eers.h>
-#include <version.h>
 #include <unit.h>
 
 #define TIMEOUT_5 1200

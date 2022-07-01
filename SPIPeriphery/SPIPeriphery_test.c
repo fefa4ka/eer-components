@@ -5,7 +5,6 @@
 
 #include <eers.h>
 #include <unit.h>
-#include <version.h>
 
 #define BUFFER_SIZE 16
 struct lr_cell     cells[BUFFER_SIZE] = {0};

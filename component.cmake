@@ -21,7 +21,6 @@ endif()
 target_link_libraries(${PROJECT_NAME} eer ${LIBS})
 target_include_directories(${PROJECT_NAME} INTERFACE .)
 
-configure_file(${EER_LIB_PATH}/include/version.h.in version.h)
 
 add_custom_target(${PROJECT_NAME}.size
     ${CMAKE_NM} --print-size --size-sort -t d lib${PROJECT_NAME}.a > ${PROJECT_NAME}.size
