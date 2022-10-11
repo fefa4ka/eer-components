@@ -16,16 +16,16 @@
 
 #define Scheduler(instance, scheduler_capacity, props)                         \
     struct Scheduler_event instance##_events[scheduler_capacity];              \
-    eer_define(Scheduler, instance, _(props),                                      \
-           _({                                                                 \
-               .queue = {.events   = instance##_events,                        \
-                         .capacity = scheduler_capacity},                      \
-           }))
+    eer_define(Scheduler, instance, _(props),                                  \
+               _({                                                             \
+                   .queue = {.events   = instance##_events,                    \
+                             .capacity = scheduler_capacity},                  \
+               }))
 
 /* Define with Timer handler */
 #define Scheduler_timer_handler(instance)                                      \
-    extern eer_timer_handler instance##_timer_handler;                         \
-    void                     instance##_timer_init(void *args)                 \
+    extern eer_timer_handler_t instance##_timer_handler;                       \
+    void                       instance##_timer_init(void *args)               \
     {                                                                          \
         if (!instance##_timer_handler.get) {                                   \
             instance##_timer_handler.get = instance.props.timer->get;          \
@@ -34,12 +34,13 @@
         }                                                                      \
         instance.props.timer->init(args);                                      \
     }                                                                          \
-    void instance##_timer_isr_enable(unsigned int     timeout_ms,              \
-                                     struct callback *callback)                \
+    void instance##_timer_isr_enable(void *args_ptr, eer_callback_t *callback) \
     {                                                                          \
-        Scheduler_enqueue(&instance, timeout_ms, callback);                    \
+        struct eer_timer_isr *args = (struct eer_timer_isr *)args_ptr;         \
+        printf("Scheduler timer timeout_ms = %d\n", args->ticks);               \
+        Scheduler_enqueue(&instance, args->ticks, callback);                   \
     }                                                                          \
-    timer_handler instance##_timer_handler                                     \
+    eer_timer_handler_t instance##_timer_handler                               \
         = {.init = instance##_timer_init,                                      \
            .isr  = {.enable = instance##_timer_isr_enable}}
 

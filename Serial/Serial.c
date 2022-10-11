@@ -36,7 +36,7 @@ WILL_UPDATE_SKIP(Serial);
 
 RELEASE(Serial)
 {
-    void (*callback)(eer_t *);
+    void (*callback)(eer_t *) = 0;
 
     if (state->mode == COMMUNICATION_MODE_TRANSMITTER) {
         props->handler->transmit(state->sending);
@@ -59,7 +59,7 @@ DID_MOUNT_SKIP(Serial);
 
 DID_UPDATE(Serial)
 {
-    void (*callback)(eer_t *);
+    void (*callback)(eer_t *) = 0;
 
     if (state->sending == props->delimiter) {
         if (state->mode == COMMUNICATION_MODE_RECEIVER)

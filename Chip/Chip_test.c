@@ -1,111 +1,66 @@
-#include <IO.h>
+#include <Chip.h>
+
 #include <eers.h>
 #include <unit.h>
 
 
-/* Indicator */
-pin_t led_pin = hw_pin(led, 0);
-IO_new(led, _({
-                .io   = &hw(gpio),
-                .pin  = &led_pin,
-                .mode = IO_OUTPUT,
-            }));
+bool is_booted = false;
+bool is_looped = false;
+bool is_ready = false;
 
-/* Sensor */
-bool  enabled    = false;
-pin_t sensor_pin = hw_pin(sensor, 0);
-void  sensor_read(eer_t *trigger)
-{
-    IO_t *sensor = (IO_t *)trigger;
-    enabled      = sensor->state.level;
+void chip_boot(eer_t *chip) {
+    is_booted = true;
 }
-IO_new(sensor, _({
-                   .io   = &hw(gpio),
-                   .pin  = &sensor_pin,
-                   .mode = IO_INPUT,
-                   .on   = {.change = sensor_read},
-               }));
 
-pin_t led_control_pin = hw_pin(led_control, 1);
-pin_t debug_pin       = hw_pin(debug, 0);
+void chip_ready(eer_t *chip) {
+    is_ready = true;
+}
 
-test(toggle_sensor, toggle_led)
+Chip(sys,
+    _({
+        .on = {
+            .boot = chip_boot,
+            .ready = chip_ready,
+        }
+    }),
+    _({
+        .frequency = {.cpu = 0},
+        .sys       = &hw(sys),
+    })
+);
+
+test(init, ready, shutdown)
 {
     // Event-loop
-    loop(sensor)
-    {
-        apply(IO, led,
-              _({
-                  .level = hw(gpio).get(&led_control_pin) ? IO_HIGH : IO_LOW,
-              }));
+    loop(sys) {
+        if(!is_looped) {
+            is_looped = true;
+        }
     }
 }
 
-result_t toggle_sensor()
+result_t init()
 {
-    test_assert(hw(gpio).get(&sensor_pin) == 0, "Sensor pin should be off");
-    test_assert(enabled == false, "Enabled should be false");
+    test_assert(!is_booted && !is_ready, "Should not booted, not ready");
 
-    hw(gpio).on(&sensor_pin);
-    usleep(20);
-    test_assert(enabled == true, "Enabled should be true");
-    test_assert(hw(gpio).get(&sensor_pin) == 1, "Sensor pin should be on");
-
-    hw(gpio).off(&sensor_pin);
-    usleep(20);
-    test_assert(hw(gpio).get(&sensor_pin) == 0, "Sensor pin should be off");
-    test_assert(enabled == false, "Enabled should be false");
+    while(!is_booted);
+    test_assert(is_booted && !is_looped && !is_ready, "Should booted, not looped, not ready. is_booted = %d is_looped = %d is_ready = %d", is_booted, is_looped, is_ready);
 
     return OK;
 }
 
-result_t toggle_led()
+result_t ready()
 {
-    test_assert(hw(gpio).get(&led_pin) == 0, "Led pin should be off");
-    test_assert(hw(gpio).get(&led_control_pin) == 0,
-                "Led control pin should be off");
-    test_assert(hw(gpio).get(&debug_pin) == 0, "Debug pin should be off");
+    while(!is_booted || !is_looped);
+    test_assert(is_booted && is_looped && !is_ready, "Should booted and looped, not ready. is_booted = %d is_looped = %d is_ready = %d", is_booted, is_looped, is_ready);
 
-    hw(gpio).on(&led_control_pin);
-    usleep(20);
-    test_assert(hw(gpio).get(&led_control_pin) == 1,
-                "Led control pin should be on");
-    test_assert(hw(gpio).get(&debug_pin) == 0, "Debug pin should be off");
-    test_assert(hw(gpio).get(&led_pin), "Led pin should be on");
+    while(!is_ready);
+    test_assert(is_booted && is_ready, "Should be ready");
 
-    hw(gpio).off(&led_control_pin);
-    usleep(20);
-    test_assert(hw(gpio).get(&led_pin) == 0, "Led pin should be off");
-    test_assert(hw(gpio).get(&led_control_pin) == 0,
-                "Led control pin should be off");
-    test_assert(hw(gpio).get(&debug_pin) == 0, "Debug pin should be off");
+    return OK;
+}
 
-    hw(gpio).on(&debug_pin);
-    usleep(20);
-    test_assert(hw(gpio).get(&led_pin) == 0, "Led pin should be off");
-    test_assert(hw(gpio).get(&led_control_pin) == 0,
-                "Led control pin should be off");
-    test_assert(hw(gpio).get(&debug_pin), "Debug pin should be on");
-
-    hw(gpio).on(&led_control_pin);
-    usleep(20);
-    test_assert(hw(gpio).get(&led_pin), "Led pin should be on");
-    test_assert(hw(gpio).get(&led_control_pin), "Led pin should be on");
-    test_assert(hw(gpio).get(&debug_pin), "Debug pin should be on");
-
-    hw(gpio).flip(&led_control_pin);
-    usleep(10);
-    test_assert(hw(gpio).get(&led_pin) == 0, "Led pin should be off");
-    test_assert(hw(gpio).get(&led_control_pin) == 0,
-                "Led control pin should be off");
-    test_assert(hw(gpio).get(&debug_pin), "Debug pin should be on");
-
-    hw(gpio).flip(&debug_pin);
-    usleep(10);
-    test_assert(hw(gpio).get(&led_pin) == 0, "Led pin should be off");
-    test_assert(hw(gpio).get(&led_control_pin) == 0,
-                "Led control pin should be off");
-    test_assert(hw(gpio).get(&debug_pin) == 0, "Debug pin should be off");
-
+result_t shutdown()
+{
     return OK;
 }

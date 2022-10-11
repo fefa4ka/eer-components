@@ -29,7 +29,7 @@ SPIComputer(spi, _({.io        = &hw(gpio),
 
 const char                 world[] = "world";
 extern struct eer_callback callback;
-result_t                   hello(void *message, void *argument)
+result_t                   hello(void *argument, void *message)
 {
     uint8_t address = *(uint8_t *)message;
 

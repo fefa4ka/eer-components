@@ -1,22 +1,5 @@
 add_library(${PROJECT_NAME} STATIC ${PROJECT_NAME}.c)
-
-if(CMAKE_CROSSCOMPILING AND CMAKE_BUILD_TYPE MATCHES Debug)
-    add_custom_command(
-        TARGET ${PROJECT_NAME}
-        PRE_BUILD
-        COMMAND grep "^[^\\#].*\$ " ${PROJECT_NAME}.i > ${PROJECT_NAME}.eu.c
-        COMMENT "Cleaning preprocessed file"
-        DEPENDS ${PROJECT_NAME}.i
-        )
-
-    add_custom_command(
-        TARGET ${PROJECT_NAME}
-        PRE_BUILD
-        COMMAND clang-format ${PROJECT_NAME}.eu.c > ${PROJECT_NAME}.e.c
-        COMMENT "Cleaning preprocessed file"
-        DEPENDS ${PROJECT_NAME}.eu.c
-        )
-endif()
+include(../eer/preprocessor.cmake)
 
 target_link_libraries(${PROJECT_NAME} eer ${LIBS})
 target_include_directories(${PROJECT_NAME} INTERFACE .)

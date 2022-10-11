@@ -25,6 +25,7 @@ bool Scheduler_enqueue(Scheduler_t *self, unsigned int timeout_us,
     eer_timer_handler_t *   timer = self->props.timer;
     unsigned int            now   = timer->get();
 
+    printf("Scheduler timeout_us = %d\n", timeout_us);
     if (queue->size == queue->capacity || timeout_us == 0) {
         /* Not enought space in queue */
         return false;
@@ -72,7 +73,7 @@ result_t event_callback(void *instance, void *argument)
     struct Scheduler_event triggered_event = {0};
     triggered_event                        = self->state.next_event;
 
-    triggered_event.callback.method(instance, triggered_event.callback.argument);
+    triggered_event.callback.method(triggered_event.callback.argument, instance);
     struct Scheduler_event null_event = {0};
     self->state.next_event            = null_event;
 
@@ -269,18 +270,18 @@ RELEASE(Scheduler)
         return;
     }
 
-    unsigned int now            = props->timer->get();
+    timer_size_t now            = props->timer->get();
     int          passed         = now - state->next_event.created;
-    /* FIXME: timer->us_to_ticks() */
-    unsigned int timeout        = state->next_event.timeout_us << 1;
+    unsigned int timeout        = props->timer->us_to_ticks(state->next_event.timeout_us);
     unsigned int scheduled_tick = now + timeout;
 
     /* Handle timer overflow */
     if (passed < 0) {
-        passed = 65535 - state->next_event.created + now;
+        passed = TIMER_MAX - state->next_event.created + now;
     }
 
     scheduled_tick -= passed;
+    printf("Passed = %d, timeout_ms = %d, timeout_tick = %d, scheduled_tick = %d\n", passed, state->next_event.timeout_us, timeout, scheduled_tick);
 
     if (passed > timeout
         || (scheduled_tick > now && props->timer->get() > scheduled_tick)

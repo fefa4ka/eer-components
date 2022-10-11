@@ -10,6 +10,7 @@ include(eer/options.cmake)
 add_subdirectory(eer)
 
 # Periphery
+add_subdirectory(Chip)
 add_subdirectory(IO)
 
 # Abstract
@@ -23,3 +24,6 @@ add_subdirectory(Bitbang)
 # Interfaces
 add_subdirectory(SPIComputer)
 add_subdirectory(SPIPeriphery)
+
+# Controllers
+add_subdirectory(Servo)

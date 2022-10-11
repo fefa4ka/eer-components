@@ -87,12 +87,12 @@ SHOULD_UPDATE_SKIP(Clock);
 ///
 WILL_UPDATE(Clock)
 {
-    unsigned int tick = props->timer->get();
+    timer_size_t tick = props->timer->get();
 
     state->passed = tick - state->tick;
     if (state->passed < 0) {
         /* Handle timer overflow */
-        state->passed = 65535 - state->tick + tick;
+        state->passed = TIMER_MAX - state->tick + tick;
     }
 
     state->tick = tick;

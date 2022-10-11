@@ -14,6 +14,7 @@
 #define Clock_get_year(instance)                                               \
     Clock_time(instance).timestamp / 31536000 + 1970
 
+
 struct Clock_time {
     uint32_t timestamp; /* Unix timestamp in seconds */
     uint16_t ms;        /* Tick counter in ms */
@@ -44,10 +45,10 @@ typedef struct {
 typedef struct {
     struct Clock_time time;
 
-    uint16_t ms;     /* Collect ms for seconds tick */
-    uint16_t us;     /* Collect us for ms tick */
-    uint16_t tick;   /* Last timer value */
-    uint16_t passed; /* Passed from last check in timer ticks */
+    uint16_t     ms;     /* Collect ms for seconds tick */
+    uint16_t     us;     /* Collect us for ms tick */
+    timer_size_t tick;   /* Last timer value */
+    uint16_t     passed; /* Passed from last check in timer ticks */
 } Clock_state_t;
 
 eer_header(Clock);

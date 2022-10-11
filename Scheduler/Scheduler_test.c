@@ -19,7 +19,7 @@ Scheduler(scheduler, 15, _({.timer = &hw(timer)}));
 
 
 int trigger_count = 0;
-eer_result_t scheduler_trigger(void *trigger, void *arg) {
+eer_result_t scheduler_trigger(void *arg, void *trigger) {
     int value = *(int *)arg;
 
     trigger_count++;

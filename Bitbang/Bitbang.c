@@ -130,7 +130,7 @@ WILL_UPDATE(Bitbang)
     /* Callback with argument */
     if (sending && state->operating == false)
         if (props->on.start && props->on.start->method)
-            props->on.start->method(self, props->on.start->argument);
+            props->on.start->method(props->on.start->argument, self);
 
     state->operating = sending;
 
@@ -145,7 +145,7 @@ WILL_UPDATE(Bitbang)
             props->io->off(props->clk_pin);
 
         if (props->on.transmitted && props->on.transmitted->method)
-            props->on.transmitted->method(self, props->on.transmitted->argument);
+            props->on.transmitted->method(props->on.transmitted->argument, self);
     }
 }
 

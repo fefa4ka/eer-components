@@ -1,8 +1,8 @@
 #include "SPIComputer.h"
 #include <eers.h>
 
-static result_t SPI_init(void *bitbanger, void *spi);
-static result_t SPI_receive(void *bitbanger, void *spi_ptr);
+static result_t SPI_init(void *spi, void *bitbanger);
+static result_t SPI_receive(void *spi_ptr, void *bitbanger);
 static enum eer_pin_mode SPI_modes[] = {PIN_MODE_OUTPUT, PIN_MODE_INPUT};
 
 WILL_MOUNT(SPIComputer)
@@ -52,7 +52,7 @@ DID_UPDATE(SPIComputer) { Bitbang_did_update(&state->bitbanger); }
 #define lr_owner_callback(owner, pointer)                                      \
     ((owner & 0x0F) | (lr_owner(pointer) << 4))
 
-static result_t SPI_init(void *bitbanger_ptr, void *spi_ptr)
+static result_t SPI_init(void *spi_ptr, void *bitbanger_ptr)
 {
     Bitbang_t     *bitbanger  = (Bitbang_t *)bitbanger_ptr;
     SPIComputer_t *spi        = (SPIComputer_t *)spi_ptr;
@@ -101,7 +101,7 @@ void SPI_read(SPIComputer_t *spi, unsigned char address,
              lr_owner_callback(copi_owner, callback));
 }
 
-static result_t SPI_receive(void *bitbanger_ptr, void *spi_ptr)
+static result_t SPI_receive(void *spi_ptr, void *bitbanger_ptr)
 {
     lr_data_t      data      = 0;
     Bitbang_t     *bitbanger = (Bitbang_t *)bitbanger_ptr;
@@ -112,7 +112,7 @@ static result_t SPI_receive(void *bitbanger_ptr, void *spi_ptr)
     *(buffer) = (uint8_t)data;
 
     if (spi->state.callback && spi->state.callback->method) {
-        spi->state.callback->method(buffer, spi->state.callback->argument);
+        spi->state.callback->method(spi->state.callback->argument, buffer);
     }
     if (spi->state.chip_select_pin) {
         spi->props.io->off(spi->state.chip_select_pin);

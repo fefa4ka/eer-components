@@ -1,10 +1,9 @@
 #pragma once
 
 #include <eer.h>
+#include <sys.h>
 
-#define Chip(instance)            eer(Chip, instance)
-#define Chip_new(instance, state) eer_withstate(Chip, instance, _(state))
-#define Chip_level(instance)      eer_state(Chip, instance, level)
+#define Chip(instance, props, state) eer_define(Chip, instance, _(props), _(state))
 
 typedef struct {
     enum eer_sys_mode mode;
@@ -22,8 +21,10 @@ typedef struct {
 typedef struct {
     enum eer_sys_mode mode;
 
-    enum eer_hw_sys_clk_source cpu_frequency;
-    enum eer_hw_sys_rtc_source rtc_frequency;
+    struct {
+        eer_sys_clk_source_t cpu;
+        eer_sys_rtc_source_t rtc;
+    } frequency;
 
     eer_sys_handler_t *sys;
 } Chip_state_t;
