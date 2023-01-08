@@ -42,7 +42,7 @@ WILL_UPDATE(Servo)
     printf("UPDATE duty_cycle = %d, remain_time = %d\n", 1e3 + props->angle * 50 / 9, props->speed * 10e3 - state->duty_cycle);
 
     if (state->on_duty != SERVO_STANDY)
-        self->stage = STAGE_RELEASED;
+        self->stage.state.step = STAGE_RELEASED;
 
     if (props->speed == 0 && next_props->speed) {
         Servo_will_mount(self, next_props);

@@ -1,6 +1,6 @@
 #include "Clock.h"
 
-#include <eers.h>
+#include <eer_test.h>
 #include <unit.h>
 
 
@@ -11,7 +11,9 @@ struct Clock_calendar now;
 test(ticks) {
     clk.props.calendar = &now;
 
-    loop(clk) {}
+    ignite(clk);
+
+    halt(0);
 }
 
 

@@ -1,5 +1,5 @@
 #include <Serial.h>
-#include <eers.h>
+#include <eer_app.h>
 #include <unit.h>
 #include <string.h>
 
@@ -86,7 +86,9 @@ test(basic_handler)
 {
     Serial_write_string(&uart, to_bus_message);
 
-    loop(uart);
+    ignite(uart);
+
+    halt(0);
 }
 
 result_t basic_handler()

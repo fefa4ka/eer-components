@@ -1,6 +1,6 @@
 #include <Chip.h>
 
-#include <eers.h>
+#include <eer_test.h>
 #include <unit.h>
 
 
@@ -29,17 +29,19 @@ Chip(sys,
     })
 );
 
-test(init, ready, shutdown)
+test(initial, ready, shutdowned)
 {
     // Event-loop
-    loop(sys) {
-        if(!is_looped) {
-            is_looped = true;
-        }
+    ignite(sys);
+
+    if(!is_looped) {
+        is_looped = true;
     }
+
+    halt(0);
 }
 
-result_t init()
+result_t initial()
 {
     test_assert(!is_booted && !is_ready, "Should not booted, not ready");
 
@@ -60,7 +62,7 @@ result_t ready()
     return OK;
 }
 
-result_t shutdown()
+result_t shutdowned()
 {
     return OK;
 }

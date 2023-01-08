@@ -1,8 +1,7 @@
 #include <Bitbang.h>
 
 #include <string.h>
-#include <eers.h>
-#include <unit.h>
+#include <eer_test.h>
 
 
 #define BUFFER_SIZE 32
@@ -31,7 +30,9 @@ Bitbang(spi, _({.io        = &hw(gpio),
                 .modes     = spi_modes,
                 .buffer    = &buffer}));
 
-test(count) { loop(clk, spi); }
+test(count) {
+    loop(clk, spi);
+}
 
 result_t count()
 {

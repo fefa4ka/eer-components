@@ -1,5 +1,5 @@
 #include <IO.h>
-#include <eers.h>
+#include <eer_test.h>
 #include <unit.h>
 
 
@@ -32,13 +32,17 @@ pin_t debug_pin       = hw_pin(debug, 0);
 test(toggle_sensor, toggle_led)
 {
     // Event-loop
-    loop(sensor)
+    ignite();
+
+    with(sensor)
     {
         apply(IO, led,
               _({
                   .level = hw(gpio).get(&led_control_pin) ? IO_HIGH : IO_LOW,
               }));
     }
+
+    halt(0);
 }
 
 result_t toggle_sensor()

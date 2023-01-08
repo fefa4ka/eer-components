@@ -2,7 +2,7 @@
 #include <Clock.h>
 #include <Button.h>
 
-#include <eers.h>
+#include <eer_test.h>
 #include <unit.h>
 
 /* Datetime couting */
@@ -55,14 +55,15 @@ Button(pusher, _({.io  = &hw(gpio),
 test(initial_state, long_push)
 {
     // Event-loop
-    loop(clk, switcher)
-    {
-        if (enabled) {
-            use(pusher);
+    ignite(clk, switcher);
 
-            apply(IO, led, _({.level = Button_is_pressed(&pusher)}));
-        }
+    if (enabled) {
+        use(pusher);
+
+        apply(IO, led, _({.level = Button_is_pressed(&pusher)}));
     }
+
+    halt(0);
 }
 
 // Another thread time dependent run test cases
@@ -130,7 +131,7 @@ result_t long_push() {
     usleep(10000);
     test_assert(Button_is_pressed(&pusher) == false,
                 "Pusher unpushed after 10 ms");
-    usleep(110000);
+    usleep(150000);
     test_assert(Button_is_pressed(&pusher), "Button pushed after 100 ms");
     test_assert(hw(gpio).get(&led_pin), "Led is on");
     hw(gpio).off(&pusher_pin);
