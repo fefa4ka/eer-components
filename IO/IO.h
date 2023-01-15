@@ -2,27 +2,32 @@
 
 #include <eer.h>
 
-#define IO(instance) eer(IO, instance)
+#define IO(instance)            eer(IO, instance)
 #define IO_new(instance, state) eer_withstate(IO, instance, _(state))
-#define IO_level(instance) eer_state(IO, instance, level)
+#define IO_level(instance)      eer_state(IO, instance, level)
 
 typedef struct {
-  enum { IO_LOW, IO_HIGH } level;
+    /* Desired level of the pin (high/low) for output mode */
+    enum { IO_LOW, IO_HIGH } level;
 } IO_props_t;
 
 typedef struct {
-  bool level;
+    /* Current level of the pin (high/low) */
+    bool level;
+    /* HAL handlers for GPIO */
+    eer_gpio_handler_t *io;
+    /* Pointer to pin object that could be handled by HAL */
+    void *pin;
 
-  eer_gpio_handler_t *io;
-  void *pin;
+    /* Pin operation mode */
+    enum { IO_OUTPUT, IO_INPUT } mode;
 
-  enum { IO_OUTPUT, IO_INPUT } mode;
-
-  struct {
-    void (*change)(eer_t *instance);
-    void (*low)(eer_t *instance);
-    void (*high)(eer_t *instance);
-  } on;
+    /* Callbacks on IO evens */
+    struct {
+        void (*change)(eer_t *instance);
+        void (*low)(eer_t *instance);
+        void (*high)(eer_t *instance);
+    } on;
 } IO_state_t;
 
 eer_header(IO);
