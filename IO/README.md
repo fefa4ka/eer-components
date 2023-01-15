@@ -93,12 +93,12 @@ These methods are used: `in()`, `out()`, `on()`, `off()` and `get()`.
 `IO` components can be used in various applications, for example for controlling:
 
 -   [Basic Example](https://github.com/fefa4ka/eer-apps/tree/master/apps/basic) - eer application with sensor is implemented by reading the gpio input signal and indicating by adjusting the gpio output signal
--   [Button](https://github.com/fefa4ka/eer-components/tree/master/Button) - uses the IO component to read the state of the button when it is pressed or released
--   [Bitbang](https://github.com/fefa4ka/eer-components/tree/master/Bitbang) - to toggle/read the state of a bunch pins
+-   [Button](../Button) - uses the IO component to read the state of the button when it is pressed or released
+-   [Bitbang](../Bitbang) - to toggle/read the state of a bunch pins
 
 ## Unit Tests
 
--   [IO_test.c](https://github.com/fefa4ka/eer-components/blob/master/IO/IO_test.c) — the sensor is implemented by reading the gpio input signal and indicating by adjusting the gpio output signal, and the callbacks are invoked on gpio change.
+-   [IO_test.c](IO_test.c) — the sensor is implemented by reading the gpio input signal and indicating by adjusting the gpio output signal, and the callbacks are invoked on gpio change.
 
 -   IO_test_mock.c — mock implementation of the gpio HAL.
 

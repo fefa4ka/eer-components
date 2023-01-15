@@ -18,7 +18,7 @@ typedef struct {
 
 
     struct Clock_time *clock; /* Timestamp for bounce filtering */
-    int                bounce_delay_ms;
+    int                bounce_delay_ms; /* Debounce delay in milliseconds */
 
     struct {
         void (*press)(eer_t *instance);
