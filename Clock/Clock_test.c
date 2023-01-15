@@ -13,7 +13,7 @@ test(ticks) {
 
     ignite(clk);
 
-    halt(0);
+    terminate;
 }
 
 

@@ -58,12 +58,12 @@ static result_t SPI_init(void *spi_ptr, void *bitbanger_ptr)
     SPIComputer_t *spi        = (SPIComputer_t *)spi_ptr;
     lr_owner_t     copi_owner = lr_owner(spi->props.bus.copi_pin);
 
-    if (lr_read(spi->props.buffer, (lr_data_t *)&spi->state.chip_select_pin,
+    if (lr_get(spi->props.buffer, (lr_data_t *)&spi->state.chip_select_pin,
                 lr_owner_chip_select(copi_owner, *bitbanger->state.data))) {
         spi->state.chip_select_pin = NULL;
     }
 
-    if (lr_read(spi->props.buffer, (lr_data_t *)&spi->state.callback,
+    if (lr_get(spi->props.buffer, (lr_data_t *)&spi->state.callback,
                 lr_owner_callback(copi_owner, *bitbanger->state.data))
         == ERROR_BUFFER_EMPTY) {
         spi->state.callback = NULL;
@@ -83,11 +83,11 @@ void SPI_write(SPIComputer_t *spi, unsigned char address, unsigned char value,
 {
     lr_owner_t copi_owner = lr_owner(spi->props.bus.copi_pin);
 
-    lr_write(spi->props.buffer, address, copi_owner);
-    lr_write(spi->props.buffer, (lr_data_t)chip_select_pin,
+    lr_put(spi->props.buffer, address, copi_owner);
+    lr_put(spi->props.buffer, (lr_data_t)chip_select_pin,
              lr_owner_chip_select(copi_owner, address));
-    lr_write(spi->props.buffer, value, copi_owner);
-    lr_write(spi->props.buffer, (lr_data_t)chip_select_pin,
+    lr_put(spi->props.buffer, value, copi_owner);
+    lr_put(spi->props.buffer, (lr_data_t)chip_select_pin,
              lr_owner_chip_select(copi_owner, value));
 }
 
@@ -97,7 +97,7 @@ void SPI_read(SPIComputer_t *spi, unsigned char address,
     lr_owner_t copi_owner = lr_owner(spi->props.bus.copi_pin);
 
     SPI_write(spi, address, 0, chip_select_pin);
-    lr_write(spi->props.buffer, (lr_data_t)callback,
+    lr_put(spi->props.buffer, (lr_data_t)callback,
              lr_owner_callback(copi_owner, callback));
 }
 
@@ -108,7 +108,7 @@ static result_t SPI_receive(void *spi_ptr, void *bitbanger_ptr)
     SPIComputer_t *spi       = (SPIComputer_t *)spi_ptr;
     uint8_t       *buffer    = bitbanger->state.data + 1;
 
-    lr_read(spi->props.buffer, &data, lr_owner(spi->props.bus.cipo_pin));
+    lr_get(spi->props.buffer, &data, lr_owner(spi->props.bus.cipo_pin));
     *(buffer) = (uint8_t)data;
 
     if (spi->state.callback && spi->state.callback->method) {

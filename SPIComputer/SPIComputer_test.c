@@ -57,8 +57,9 @@ result_t spi_callback()
     sleep(2);
     test_assert(hw(gpio).get(&debug_pin),
                 "Pin shoud be high, raised by SPI_read callback");
-    test_assert(lr_length(&buffer) == 0,
+    test_assert(lr_count(&buffer) == 0,
                 "Buffer should be empty after communication, but %d",
-                lr_length(&buffer));
+                lr_count(&buffer));
     return OK;
 }
+

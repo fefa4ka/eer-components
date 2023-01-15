@@ -42,7 +42,7 @@ test(toggle_sensor, toggle_led)
               }));
     }
 
-    halt(0);
+    terminate;
 }
 
 result_t toggle_sensor()

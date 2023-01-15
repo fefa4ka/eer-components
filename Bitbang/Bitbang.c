@@ -100,7 +100,7 @@ WILL_UPDATE(Bitbang)
                 /* Write full byte from input */
                 // TODO: if zero?
                 if (*data)
-                    lr_write(props->buffer, *data, lr_owner(*pin));
+                    lr_put(props->buffer, *data, lr_owner(*pin));
             } else {
                 /* Read bit */
                 if (props->io->get(*pin))
@@ -112,7 +112,7 @@ WILL_UPDATE(Bitbang)
             /* Read new byte for output */
             if (!state->operating) {
                 lr_data_t cell_data = 0;
-                if (lr_read(props->buffer, &cell_data, lr_owner(*pin))
+                if (lr_get(props->buffer, &cell_data, lr_owner(*pin))
                     == OK) {
                     sending = true;
                     *data   = (uint8_t)cell_data;

@@ -48,7 +48,7 @@ WILL_UPDATE(SPIPeriphery)
     /* Data for sending available */
     if (!state->sending && state->bit_position >= 8) {
         lr_data_t sending;
-        lr_read(props->buffer, (lr_data_t *)&sending, lr_owner(self));
+        lr_get(props->buffer, (lr_data_t *)&sending, lr_owner(self));
         if (props->bit_order == BIT_ORDER_MSB) {
             state->sending = reverse((uint8_t)sending);
         } else {

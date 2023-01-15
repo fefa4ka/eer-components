@@ -38,7 +38,7 @@ void    mirror_echo(eer_t *instance)
     if (!address)
         eer_stop = 1;
 
-    lr_write(&buffer, address, lr_owner(instance));
+    lr_put(&buffer, address, lr_owner(instance));
 }
 
 void mirror_receive(eer_t *instance)

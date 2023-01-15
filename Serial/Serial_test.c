@@ -88,7 +88,7 @@ test(basic_handler)
 
     ignite(uart);
 
-    halt(0);
+    terminate;
 }
 
 result_t basic_handler()

@@ -38,7 +38,7 @@ test(initial, ready, shutdowned)
         is_looped = true;
     }
 
-    halt(0);
+    terminate;
 }
 
 result_t initial()

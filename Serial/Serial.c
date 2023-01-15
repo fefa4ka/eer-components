@@ -22,7 +22,7 @@ SHOULD_UPDATE(Serial)
         lr_data_t cell_data = 0;
         state->mode         = COMMUNICATION_MODE_TRANSMITTER;
 
-        if (lr_read(props->buffer, &cell_data, owner(transmit)) == OK) {
+        if (lr_get(props->buffer, &cell_data, owner(transmit)) == OK) {
             state->sending = (uint8_t)cell_data;
 
             return true;
@@ -44,7 +44,7 @@ RELEASE(Serial)
         callback = props->on.transmit;
     } else if (state->mode == COMMUNICATION_MODE_RECEIVER) {
         state->sending = props->handler->receive();
-        lr_write(props->buffer, state->sending, owner(receive));
+        lr_put(props->buffer, state->sending, owner(receive));
 
         callback = props->on.receive;
     }

@@ -6,7 +6,7 @@
 
 #define BUFFER_SIZE 32
 #define buffer_size(owner)                                                     \
-    lr_length_owned(&buffer, lr_owner(owner))
+    lr_count_owned(&buffer, lr_owner(owner))
 
 struct lr_cell     cells[BUFFER_SIZE] = {0};
 struct linked_ring buffer             = {cells, BUFFER_SIZE};
@@ -45,7 +45,7 @@ result_t count()
                 "CIPO buffer should be empty, but %d", buffer_size(&cipo_pin));
 
     hw(gpio).on(&cipo_pin);
-    lr_write_string(&buffer, number_order, lr_owner(&copi_pin));
+    lr_put_string(&buffer, number_order, lr_owner(&copi_pin));
     sleep(3);
 
     test_assert(buffer_size(&copi_pin) == 0,
@@ -54,9 +54,9 @@ result_t count()
                 "CIPO buffer should be %lu, but %d", strlen((const char *)number_order),
                 buffer_size(&cipo_pin));
 
-    lr_read(&buffer, &input_data, lr_owner(&cipo_pin));
+    lr_get(&buffer, &input_data, lr_owner(&cipo_pin));
     test_assert((uint8_t)input_data == 255, "First byte should be 255, but %d", (uint8_t)input_data);
-    lr_read(&buffer, &input_data, lr_owner(&cipo_pin));
+    lr_get(&buffer, &input_data, lr_owner(&cipo_pin));
     test_assert((uint8_t)input_data == 255, "Second byte should be 255, but %d", (uint8_t)input_data);
 
     return OK;

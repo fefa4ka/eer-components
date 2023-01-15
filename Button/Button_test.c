@@ -1,3 +1,4 @@
+#include "eer_app.h"
 #include <IO.h>
 #include <Clock.h>
 #include <Button.h>
@@ -63,7 +64,7 @@ test(initial_state, long_push)
         apply(IO, led, _({.level = Button_is_pressed(&pusher)}));
     }
 
-    halt(0);
+    terminate;
 }
 
 // Another thread time dependent run test cases
