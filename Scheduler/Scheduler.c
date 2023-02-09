@@ -23,9 +23,10 @@ bool Scheduler_enqueue(Scheduler_t *self, unsigned int timeout_us,
 {
     struct Scheduler_queue *queue = &self->state.queue;
     eer_timer_handler_t *   timer = self->props.timer;
-    unsigned int            now   = timer->get();
+    unsigned int            now;
 
-    printf("Scheduler timeout_us = %d\n", timeout_us);
+    timer->get(&now);
+
     if (queue->size == queue->capacity || timeout_us == 0) {
         /* Not enought space in queue */
         return false;
@@ -172,6 +173,7 @@ bool Scheduler_dequeue(Scheduler_t *self, struct Scheduler_event *dequed_event)
     eer_timer_handler_t *   timer      = self->props.timer;
     struct Scheduler_event *events     = queue->events;
     unsigned int            last_index = queue->size - 1;
+    timer_size_t moment;
 
     /* Empty queue */
     struct Scheduler_event null_event = {0};
@@ -198,7 +200,8 @@ bool Scheduler_dequeue(Scheduler_t *self, struct Scheduler_event *dequed_event)
 
     /* Queue reordering because last slot swapped */
     if (queue->size > 1) {
-        event_heapify(queue, timer->get(), 0);
+        timer->get(&moment);
+        event_heapify(queue, moment, 0);
     }
 
     *dequed_event = closest_event;
@@ -222,6 +225,8 @@ WILL_MOUNT(Scheduler)
  */
 SHOULD_UPDATE(Scheduler)
 {
+    timer_size_t now;
+
     // If queue empty, there are nothing to do
     if (state->queue.size == 0) {
         return false;
@@ -235,8 +240,9 @@ SHOULD_UPDATE(Scheduler)
     //            {
 
     /* If next event closest that in queue */
+    props->timer->get(&now);
     if (closest_event->callback.method && state->next_event.callback.method
-        && event_compare(props->timer->get(), &state->next_event,
+        && event_compare(now, &state->next_event,
                          closest_event)) {
         return false;
     }
@@ -249,10 +255,13 @@ SHOULD_UPDATE(Scheduler)
  */
 WILL_UPDATE(Scheduler)
 {
+    timer_size_t now;
+    props->timer->get(&now);
+
     if (state->next_event.callback.method) {
         /* Event allready scheduled, back it to queue */
         props->timer->isr.disable(0);
-        event_prioritify(&state->queue, props->timer->get(),
+        event_prioritify(&state->queue, now,
                          &state->next_event);
     }
 
@@ -270,22 +279,25 @@ RELEASE(Scheduler)
         return;
     }
 
-    timer_size_t now            = props->timer->get();
-    int          passed         = now - state->next_event.created;
+    timer_size_t now;
+    timer_size_t moment;
+    int          passed;
     unsigned int timeout        = props->timer->us_to_ticks(state->next_event.timeout_us);
-    unsigned int scheduled_tick = now + timeout;
+    unsigned int scheduled_tick;
 
+    props->timer->get(&now);
+     passed         = now - state->next_event.created;
+    scheduled_tick = now + timeout;
     /* Handle timer overflow */
     if (passed < 0) {
         passed = TIMER_MAX - state->next_event.created + now;
     }
 
     scheduled_tick -= passed;
-    printf("Passed = %d, timeout_ms = %d, timeout_tick = %d, scheduled_tick = %d\n", passed, state->next_event.timeout_us, timeout, scheduled_tick);
 
     if (passed > timeout
-        || (scheduled_tick > now && props->timer->get() > scheduled_tick)
-        || (now > scheduled_tick && scheduled_tick > props->timer->get())) {
+        || (scheduled_tick > now && *(timer_size_t *)props->timer->get(&moment) > scheduled_tick)
+        || (now > scheduled_tick && scheduled_tick > *(timer_size_t *)props->timer->get(&moment))) {
         /* Scheduled event allready should happen */
         event_callback(self, 0);
     } else {

@@ -19,8 +19,6 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_test.c" AND NOT CMAKE_CRO
     target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME} ${LIBS} ${TEST_LIBS} ${TEST_HAL_LIBS})
     target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
-
-
     add_test(NAME ${PROJECT_NAME}_test
         COMMAND ${PROJECT_NAME}_test)
 endif()

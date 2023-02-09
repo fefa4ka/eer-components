@@ -13,11 +13,9 @@ WILL_MOUNT(Servo)
 {
     state->io->out(state->pin);
 
-    printf("MOUNT duty_cycle = %d, remain_time = %d\n", 1e3 + props->angle * 50 / 9, props->speed * 10e3 - state->duty_cycle);
     state->on_duty     = true;
     state->duty_cycle  = 1e3 + props->angle * 50 / 9;
     state->remain_time = props->speed * 10e3 - state->duty_cycle;
-    printf("MOUNT duty_cycle = %d, remain_time = %d\n", 1e3 + props->angle * 50 / 9, props->speed * 10e3 - state->duty_cycle);
 
     state->release.method = (enum eer_result (*)(void *argument, void *trigger))self->release;
     state->release.argument = self;
@@ -39,8 +37,6 @@ WILL_UPDATE(Servo)
     state->duty_cycle  = 1e3 + props->angle * 50 / 9;
     state->remain_time = props->speed * 10e3 - state->duty_cycle;
 
-    printf("UPDATE duty_cycle = %d, remain_time = %d\n", 1e3 + props->angle * 50 / 9, props->speed * 10e3 - state->duty_cycle);
-
     if (state->on_duty != SERVO_STANDY)
         self->stage.state.step = STAGE_RELEASED;
 
@@ -53,13 +49,10 @@ RELEASE(Servo)
 {
     if (props->speed) {
         if (state->on_duty == SERVO_ON_DUTY) {
-            printf("Servo off\n");
             state->io->off(state->pin);
             state->on_duty = SERVO_ON_OFFSET;
         } else {
-            printf("Servo on\n");
             state->io->on(state->pin);
-
             state->on_duty = SERVO_ON_DUTY;
         }
 
@@ -70,12 +63,13 @@ RELEASE(Servo)
             TIMER_EVENT_COMPARE,
         };
 
-        struct eer_callback timer_callback = { self->release, self };
+        struct eer_callback timer_callback = {
+            (eer_result_t (*)(void *, void *))self->release,
+            self
+        };
 
         state->timer->isr.enable(&timer_settings, &timer_callback);
-        printf("Set on %d timer %d, duty_cycle = %d,  speed = %d, remain_time =%d\n", state->on_duty, timer_settings.ticks, state->duty_cycle, props->speed, state->remain_time);
     } else {
-        printf("Servo standby\n");
         state->io->off(state->pin);
         state->on_duty = SERVO_STANDY;
     }

@@ -74,7 +74,8 @@ WILL_MOUNT(Clock)
     void *ptr = 0;
     props->timer->init(ptr);
 
-    state->tick = state->passed = props->timer->get();
+    props->timer->get(&(state->tick));
+    state->passed = state->tick;
 }
 
 ///
@@ -87,7 +88,9 @@ SHOULD_UPDATE_SKIP(Clock);
 ///
 WILL_UPDATE(Clock)
 {
-    timer_size_t tick = props->timer->get();
+    timer_size_t tick;
+
+    props->timer->get(&tick);
 
     state->passed = tick - state->tick;
     if (state->passed < 0) {
