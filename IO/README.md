@@ -11,9 +11,9 @@ bool  indicator_value = true;
 pin_t indicator_pin   = hw_pin(B, 12);
 void  indicator_toggle(eer_t *indicator) { indicator_value = !indicator_value; }
 IO_new(indicator, _({
-    .io = &hw(gpio),
-    .pin = &indicator_pin,
-    .mode = IO_OUTPUT,
+    .io = &hw(gpio),         /* Set gpio HAL */
+    .pin = &indicator_pin,   /* Set pin */
+    .mode = IO_OUTPUT,       /* Set mode to output */
     .on = { .change = indicator_toggle }
 }));
 

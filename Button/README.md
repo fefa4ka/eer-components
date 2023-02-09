@@ -4,7 +4,7 @@
 
 ## Usage
 
-Declaration and usage of the `Button` component with a push-pullup type button:
+you can create an instance of the Button component using the `Button(instance, props)` macro, where `enter` is the name you want to give to the instance and passed props is an instance of the `Button_props_t` structure containing the properties for the component.
 
 ```c
 Clock(clk, &hw(timer), TIMESTAMP);
@@ -34,7 +34,7 @@ Button(enter, _({
 
 In this example, the `enter` button is configured to be a push-pullup type button, with a bounce delay of 100 milliseconds. The `.io` field is set to the gpio HAL, and the `.pin` field is set to the specific pin that the button is connected to. The `.clock` field is set to the clk component's state's time field, which is used for timestamping button events for bounce filtering.
 
-The `Button_is_pressed(enter)` macro can be used to check the current state of the button, whether it is pressed or not.
+The `Button_is_pressed(enter)` macro can be used to check the current state of the button, whether it is pressed or not, which will return a boolean value indicating whether the button is currently pressed.
 
 The `on` field is used to set callbacks for button events such as `press`, `release`, and `toggle`. These callbacks will be invoked when the corresponding event occurs.
 
