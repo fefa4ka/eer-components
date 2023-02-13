@@ -7,6 +7,10 @@
  */
 WILL_MOUNT(Chip)
 {
+    if(state->sys->init)
+        /* TODO: API for Chip initialization config */
+        state->sys->init(0);
+
     if(state->frequency.cpu) {
         eer_sys_clk_source_t cpu_frequency = state->frequency.cpu;
         state->sys->clock.set(&cpu_frequency);
