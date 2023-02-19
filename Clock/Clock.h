@@ -48,7 +48,7 @@ typedef struct {
     uint16_t     ms;     /* Collect ms for seconds tick */
     uint16_t     us;     /* Collect us for ms tick */
     timer_size_t tick;   /* Last timer value */
-    uint16_t     passed; /* Passed from last check in timer ticks */
+    timer_size_t passed; /* Passed from last check in timer ticks */
 } Clock_state_t;
 
 eer_header(Clock);

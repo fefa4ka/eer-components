@@ -37,7 +37,6 @@
     void instance##_timer_isr_enable(void *args_ptr, eer_callback_t *callback) \
     {                                                                          \
         struct eer_timer_isr *args = (struct eer_timer_isr *)args_ptr;         \
-        printf("Scheduler timer timeout_ms = %d\n", args->ticks);               \
         Scheduler_enqueue(&instance, args->ticks, callback);                   \
     }                                                                          \
     eer_timer_handler_t instance##_timer_handler                               \

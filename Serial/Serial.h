@@ -18,7 +18,8 @@
 
 typedef struct {
     eer_serial_handler_t *handler;
-    uint16_t              baudrate;
+    /* TODO: uart_baudrate_t */
+    uint32_t              baudrate;
     uint8_t               delimiter;
     struct linked_ring *  buffer;
 

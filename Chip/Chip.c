@@ -27,6 +27,7 @@ WILL_UPDATE_SKIP(Chip);
  */
 SHOULD_UPDATE(Chip)
 {
+    /* TODO: state->mode get from sys->mode.get() */
     if(state->mode == SYS_MODE_BOOT) {
         state->mode = SYS_MODE_READY;
 

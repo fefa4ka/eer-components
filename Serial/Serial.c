@@ -51,7 +51,6 @@ RELEASE(Serial)
 
     if (callback) {
         callback(self);
-//printf("[%d][%c]\n", state->mode == COMMUNICATION_MODE_RECEIVER,  state->sending);
     }
 }
 
